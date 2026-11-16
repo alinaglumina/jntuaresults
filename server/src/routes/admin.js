@@ -4,6 +4,8 @@ import path from 'path';
 import mongoose from 'mongoose';
 import Result from '../models/Result.js';
 import ResultRow from '../models/ResultRow.js';
+import Official, { SECTIONS } from '../models/Official.js';
+import { shape as officialShape } from './officials.js';
 import { parseWorkbook, normKey } from '../lib/sheet.js';
 import { requireAuth } from '../middleware/auth.js';
 import { makeKey, putFile, deleteFile } from '../config/storage.js';
@@ -101,6 +103,53 @@ router.delete('/results/:id', async (req, res, next) => {
     await ResultRow.deleteMany({ resultId: doc._id });
     await deleteFile(doc.fileKey);
     res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// ---------- Officials (About Us pages) ----------
+const photoUpload = multer({
+  storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024, files: 1 },
+  fileFilter: (req, file, cb) => (/^image\/(png|jpe?g|webp)$/.test(file.mimetype) ? cb(null, true) : cb(new Error('Photo must be a PNG, JPG or WebP image'))),
+});
+async function savePhoto(doc, file) {
+  const key = makeKey(`official-${doc.name}${path.extname(file.originalname)}`);
+  await putFile(key, file.buffer, file.mimetype);
+  const old = doc.photoKey; doc.photoKey = key; doc.photoMime = file.mimetype; return old;
+}
+router.get('/officials', async (req, res, next) => {
+  try { const items = await Official.find().sort({ section: 1, order: 1, createdAt: 1 }).lean(); res.json({ items: items.map(officialShape) }); } catch (e) { next(e); }
+});
+router.post('/officials', photoUpload.single('photo'), async (req, res, next) => {
+  try {
+    const { section, name, designation, order } = req.body;
+    if (!SECTIONS.includes(section)) return bad(res, 'Choose a valid section');
+    if (!name?.trim()) return bad(res, 'Name is required');
+    const doc = new Official({ section, name: name.trim(), designation: (designation || '').trim(), order: Number(order) || 0 });
+    if (req.file) await savePhoto(doc, req.file);
+    await doc.save(); res.status(201).json(officialShape(doc));
+  } catch (e) { next(e); }
+});
+router.put('/officials/:id', photoUpload.single('photo'), async (req, res, next) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) return res.status(404).json({ error: 'Not found' });
+    const doc = await Official.findById(req.params.id); if (!doc) return res.status(404).json({ error: 'Not found' });
+    const { section, name, designation, order, removePhoto } = req.body;
+    if (section !== undefined) { if (!SECTIONS.includes(section)) return bad(res, 'Choose a valid section'); doc.section = section; }
+    if (name !== undefined) { if (!name.trim()) return bad(res, 'Name is required'); doc.name = name.trim(); }
+    if (designation !== undefined) doc.designation = designation.trim();
+    if (order !== undefined) doc.order = Number(order) || 0;
+    let oldKey;
+    if (req.file) oldKey = await savePhoto(doc, req.file);
+    else if (removePhoto === 'true') { oldKey = doc.photoKey; doc.photoKey = undefined; doc.photoMime = undefined; }
+    await doc.save(); if (oldKey) await deleteFile(oldKey);
+    res.json(officialShape(doc));
+  } catch (e) { next(e); }
+});
+router.delete('/officials/:id', async (req, res, next) => {
+  try {
+    if (!mongoose.isValidObjectId(req.params.id)) return res.status(404).json({ error: 'Not found' });
+    const doc = await Official.findByIdAndDelete(req.params.id); if (!doc) return res.status(404).json({ error: 'Not found' });
+    await deleteFile(doc.photoKey); res.json({ ok: true });
   } catch (e) { next(e); }
 });
 export default router;

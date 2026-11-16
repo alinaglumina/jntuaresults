@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx';
 import { About, Contact } from './pages/Static.jsx';
 import ViewResults from './pages/ViewResults.jsx';
 import Admin from './pages/Admin.jsx';
+import Officials from './pages/Officials.jsx';
 export default function App() {
   return (
     <>
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/view-results" element={<ViewResults />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/about/:slug" element={<Officials />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Home />} />

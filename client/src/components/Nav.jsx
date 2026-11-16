@@ -16,6 +16,9 @@ export default function Nav() {
           <button className="nav-a nav-btn" aria-expanded={open} onClick={() => setOpen(!open)}>About Us <span className="caret" aria-hidden="true" /></button>
           {open && (
             <div className="dd-menu" role="menu">
+              <NavLink to="/about/director-evaluation" onClick={() => setOpen(false)} role="menuitem">Director of Evaluation</NavLink>
+              <NavLink to="/about/controller" onClick={() => setOpen(false)} role="menuitem">Controller of Examinations</NavLink>
+              <NavLink to="/about/additional-controllers" onClick={() => setOpen(false)} role="menuitem">Additional Controller of Examinations</NavLink>
               <NavLink to="/about" onClick={() => setOpen(false)} role="menuitem">About the Center</NavLink>
               <a href="https://www.jntua.ac.in" target="_blank" rel="noopener noreferrer" role="menuitem">JNTUA Website</a>
             </div>
