@@ -13,9 +13,12 @@ export function Contact() {
   return (
     <section className="wrap narrow">
       <div className="sec-head"><span className="bar" /><h2>Contact Us</h2></div>
-      <div className="card pad">
-        <p><b>Jawaharlal Nehru Technological University Anantapur</b><br />Ananthapuramu, Andhra Pradesh, India, Pin: 515002</p>
-        <p>Examination Branch, JNTUA. Website: <a href="https://www.jntua.ac.in" target="_blank" rel="noopener noreferrer">www.jntua.ac.in</a></p>
+      <div className="card pad contact">
+        <h3>Examination Helpline Center</h3>
+        <p className="crow"><span className="clabel">Off:</span> <a href="tel:+918554242438">08554-242438</a></p>
+        <p className="crow"><span className="clabel">Email:</span> <a href="mailto:ce.office@jntua.ac.in">ce.office@jntua.ac.in</a></p>
+        <hr />
+        <p className="caddr"><b>Jawaharlal Nehru Technological University Anantapur</b><br />Ananthapuramu, Andhra Pradesh, India, Pin: 515002<br /><a href="https://www.jntua.ac.in" target="_blank" rel="noopener noreferrer">www.jntua.ac.in</a></p>
       </div>
     </section>
   );

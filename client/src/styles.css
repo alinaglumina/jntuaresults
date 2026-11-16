@@ -159,3 +159,10 @@ a{color:var(--navy2)}
 .otable td{text-align:left}.otable td.c-sno{text-align:center}
 .form select{padding:10px 12px;border:1px solid #c7d0dc;border-radius:6px;font-size:15px;font-family:inherit;background:#fff}
 .tabs button.show{border-radius:6px}
+
+/* contact page */
+.contact h3{margin:0 0 14px;font-family:'Playfair Display',Georgia,serif;font-size:22px;color:var(--navy)}
+.contact .crow{margin:6px 0;font-size:17px}
+.contact .clabel{display:inline-block;min-width:54px;font-weight:600;color:var(--navy)}
+.contact hr{border:0;border-top:1px solid var(--line);margin:20px 0 16px}
+.contact .caddr{margin:0;color:#475a7a;line-height:1.7;font-size:15px}
