@@ -2,6 +2,7 @@ import { env } from '../config/env.js';
 // Verifies an hCaptcha token. In production a secret is mandatory; in local dev
 // with no secret the check is skipped so you can test without keys.
 export async function verifyCaptcha(req, res, next) {
+  if (process.env.CAPTCHA === 'off') return next(); // captcha switched off by configuration
   const secret = env.hcaptchaSecret;
   if (!secret) {
     if (env.isProd) return res.status(503).json({ error: 'Verification is not configured on the server' });

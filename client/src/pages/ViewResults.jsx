@@ -61,7 +61,7 @@ export default function ViewResults() {
             <input id="ht" value={ht} onChange={(e) => { setHt(e.target.value); setErr(''); }} placeholder="Hallticket Number" autoComplete="off" maxLength={40} autoFocus />
           </div>
           {touched && empty && <div className="req">Hallticket Number Required</div>}
-          <div className="vcap"><HCaptcha onToken={setToken} resetKey={reset} /></div>
+          {import.meta.env.VITE_CAPTCHA !== 'off' && <div className="vcap"><HCaptcha onToken={setToken} resetKey={reset} /></div>}
           {err && <div className="req">{err}</div>}
           <button className="vsearch-btn" disabled={busy}>{busy ? 'Searching…' : 'Search'}</button>
         </form>
