@@ -14,6 +14,7 @@ async function req(path, { method = 'GET', body, auth } = {}) {
 export const api = {
   results: (page, q) => req(`/results?page=${page}&limit=25${q ? `&q=${encodeURIComponent(q)}` : ''}`),
   result: (id) => req(`/results/${id}`),
+  lookup: (id, hallTicket, captcha) => req(`/results/${id}/lookup`, { method: 'POST', body: { hallTicket, captcha } }),
   login: (email, password) => req('/auth/login', { method: 'POST', body: { email, password } }),
   adminList: (page) => req(`/admin/results?page=${page}`, { auth: true }),
   adminSave: (id, form) => req(id ? `/admin/results/${id}` : '/admin/results', { method: id ? 'PUT' : 'POST', body: form, auth: true }),

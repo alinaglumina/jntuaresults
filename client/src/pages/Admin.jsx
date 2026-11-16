@@ -33,7 +33,7 @@ function Dashboard({ onLogout }) {
       const fd = new FormData();
       fd.append('title', form.title); fd.append('publishDate', form.publishDate); fd.append('isPublished', String(form.isPublished));
       if (form.file) fd.append('file', form.file); else if (form.externalUrl) fd.append('externalUrl', form.externalUrl);
-      await api.adminSave(form.id, fd); setMsg(form.id ? 'Result updated.' : 'Result published.'); reset(); load();
+      const saved = await api.adminSave(form.id, fd); setMsg((form.id ? 'Result updated.' : 'Result published.') + (saved.type === 'sheet' ? ` ${saved.rowCount.toLocaleString()} students loaded from the Excel file.` : '')); reset(); load();
     } catch (x) { if (x.status === 401) onLogout(); else setErr(x.message); }
     setBusy(false);
   };
@@ -63,7 +63,7 @@ function Dashboard({ onLogout }) {
             {data && data.items.length === 0 && <tr><td colSpan="5" className="empty">No results yet.</td></tr>}
             {data && data.items.map((r) => (
               <tr key={r.id}><td className="c-date">{fmtDate(r.publishDate)}</td><td>{r.title}{r.fileName && <div className="note" style={{ margin: 0, textAlign: 'left' }}>{r.fileName}</div>}</td>
-                <td>{r.type}</td><td>{r.isPublished ? 'Live' : 'Hidden'}</td>
+                <td>{r.type === 'sheet' ? `Excel · ${(r.rowCount || 0).toLocaleString()} students` : r.type}</td><td>{r.isPublished ? 'Live' : 'Hidden'}</td>
                 <td className="c-link act"><button className="show" onClick={() => edit(r)}>Edit</button> <button className="show danger" onClick={() => del(r)}>Delete</button></td></tr>
             ))}
           </tbody>

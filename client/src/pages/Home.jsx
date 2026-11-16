@@ -5,7 +5,7 @@ import Pager from '../components/Pager.jsx';
 
 function ShowButton({ r }) {
   if (r.type === 'link') return <a className="show" href={r.url} target="_blank" rel="noopener noreferrer">Show</a>;
-  if (r.type === 'sheet') return <Link className="show" to={`/view/${r.id}`}>Show</Link>;
+  if (r.type === 'sheet') return <Link className="show" to={`/view-results?resultSetId=${r.id}`}>Show</Link>;
   return <a className="show" href={fileUrl(r.id)} target="_blank" rel="noopener noreferrer">Show</a>;
 }
 export default function Home() {

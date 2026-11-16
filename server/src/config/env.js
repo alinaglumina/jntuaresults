@@ -2,6 +2,8 @@ import 'dotenv/config';
 const list = (v) => String(v || '').split(',').map((s) => s.trim()).filter(Boolean);
 export const env = {
   port: Number(process.env.PORT) || 5000,
+  isProd: process.env.NODE_ENV === 'production',
+  hcaptchaSecret: process.env.HCAPTCHA_SECRET,
   mongoUri: process.env.MONGODB_URI || process.env.MONGO_URI,
   jwtSecret: process.env.JWT_SECRET,
   origins: list(process.env.CLIENT_ORIGIN || 'http://localhost:5173'),
